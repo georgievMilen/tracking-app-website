@@ -19,6 +19,13 @@ export default {
       },
     },
     {
+      name: 'categories',
+      displayName: 'menu.categories',
+      meta: {
+        icon: 'vuestic-iconset-files',
+      },
+    },
+    {
       name: 'statistics',
       displayName: 'menu.statistics',
       meta: {

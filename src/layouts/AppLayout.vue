@@ -32,6 +32,8 @@
   import Navbar from '../components/navbar/Navbar.vue'
   import Sidebar from '../components/sidebar/Sidebar.vue'
 
+  import DashData from '../services/dashboard-data/dashData'
+
   const GlobalStore = useGlobalStore()
 
   const mobileBreakPointPX = 640
@@ -42,7 +44,7 @@
 
   const isMobile = ref(false)
   const isTablet = ref(false)
-  const { isSidebarMinimized } = storeToRefs(GlobalStore)
+  const { isSidebarMinimized, dashData } = storeToRefs(GlobalStore)
   const checkIsTablet = () => window.innerWidth <= tabletBreakPointPX
   const checkIsMobile = () => window.innerWidth <= mobileBreakPointPX
 
@@ -55,8 +57,12 @@
     sidebarWidth.value = isTablet.value ? '100%' : '16rem'
   }
 
-  onMounted(() => {
+  onMounted(async () => {
     window.addEventListener('resize', onResize)
+
+    DashData.getDashData().then((response) => {
+      dashData.value = response
+    })
   })
 
   onBeforeUnmount(() => {

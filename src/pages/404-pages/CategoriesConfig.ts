@@ -9,6 +9,15 @@ export default [
     ],
   },
   {
+    categoryName: 'Categories',
+    items: [
+      {
+        itemName: 'Categories',
+        itemLink: '/admin/categories',
+      },
+    ],
+  },
+  {
     categoryName: 'Statistics',
     items: [
       {

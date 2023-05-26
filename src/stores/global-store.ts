@@ -5,6 +5,7 @@ export const useGlobalStore = defineStore('global', {
     return {
       isSidebarMinimized: false,
       userName: 'Vasili S',
+      dashData: <any>[],
     }
   },
 
@@ -15,6 +16,9 @@ export const useGlobalStore = defineStore('global', {
 
     changeUserName(userName: string) {
       this.userName = userName
+    },
+    setDataData(dashData: Array<any>) {
+      this.dashData = dashData
     },
   },
 })
