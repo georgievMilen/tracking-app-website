@@ -28,6 +28,16 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('../pages/admin/categories/Categories.vue'),
       },
       {
+        name: 'accounts',
+        path: 'accounts',
+        component: () => import('../pages/admin/accounts/Accounts.vue'),
+      },
+      {
+        name: 'transactions',
+        path: 'transactions',
+        component: () => import('../pages/admin/transactions/Transactions.vue'),
+      },
+      {
         name: 'statistics',
         path: 'statistics',
         component: RouteViewComponent,

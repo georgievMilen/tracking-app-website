@@ -31,39 +31,48 @@
       </va-card>
     </div>
 
-    <div class="flex xs12 sm6 md6 lg3 xl3">
+    <div class="flex xs12 sm6">
+      <div class="flex xs12 lg6">
+        <va-button-toggle v-model="categoryType" :options="categoryTypes" @click="onCategoryToggle" />
+      </div>
       <va-card class="d-flex">
-        <va-card-title>
-          <h1>{{ t('dashboard.charts.loadingSpeed') }}</h1>
-          <va-button icon="print" plain @click="printChart" />
-        </va-card-title>
+        <!--        <va-card-title>-->
+        <!--          <h1>{{ t('dashboard.charts.loadingSpeed') }}</h1>-->
+        <!--          <va-button icon="print" plain @click="printChart" />-->
+        <!--        </va-card-title>-->
         <va-card-content v-if="doughnutChartDataGenerated">
-          <va-chart ref="doughnutChart" class="chart chart--donut" :data="doughnutChartDataGenerated" type="doughnut" />
+          <va-chart
+            ref="doughnutChart"
+            class="chart chart--donut"
+            :data="categoriesDataFormatter(categories)"
+            type="doughnut"
+          />
         </va-card-content>
       </va-card>
-    </div>
-
-    <div class="flex xs12 sm6 md6 lg3 xl3">
-      <dashboard-contributors-chart />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { onMounted, reactive, ref } from 'vue'
   import { useI18n } from 'vue-i18n'
   import { doughnutChartData, lineChartData } from '../../../data/charts'
   import { useChartData } from '../../../data/charts/composables/useChartData'
   import { usePartOfChartData } from './composables/usePartOfChartData'
   import VaChart from '../../../components/va-charts/VaChart.vue'
-  import DashboardContributorsChart from './DashboardContributorsList.vue'
+  import CategoryService from '../../../services/http/CategoryService'
+  import { categoriesDataFormatter } from '../../../data/charts/doughnutChartData'
+  import { categoryTypes } from '../../../data/categoryTypes'
 
   const { t } = useI18n()
 
   const doughnutChart = ref()
 
+  const categoryType = ref<string>('expense')
+
   const dataGenerated = useChartData(lineChartData, 0.7)
-  const doughnutChartDataGenerated = useChartData(doughnutChartData)
+  let categories = ref([])
+  let doughnutChartDataGenerated = ref()
 
   const {
     dataComputed: lineChartDataGenerated,
@@ -73,6 +82,19 @@
     setDatasetIndex,
   } = usePartOfChartData(dataGenerated)
 
+  async function getCategories(type: string) {
+    const response = await CategoryService.list({ type })
+    categories.value = reactive(response)
+    doughnutChartDataGenerated.value = useChartData(categoriesDataFormatter(categories.value))
+    console.log(response)
+  }
+  function onCategoryToggle() {
+    getCategories(categoryType.value)
+  }
+
+  onMounted(() => {
+    getCategories(categoryType.value)
+  })
   function printChart() {
     const windowObjectReference = window.open('', 'Print', 'height=600,width=800') as Window
 

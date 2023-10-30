@@ -26,6 +26,20 @@ export default {
       },
     },
     {
+      name: 'accounts',
+      displayName: 'menu.accounts',
+      meta: {
+        icon: 'vuestic-iconset-files',
+      },
+    },
+    {
+      name: 'transactions',
+      displayName: 'menu.transactions',
+      meta: {
+        icon: 'vuestic-iconset-files',
+      },
+    },
+    {
       name: 'statistics',
       displayName: 'menu.statistics',
       meta: {

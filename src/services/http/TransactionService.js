@@ -1,7 +1,7 @@
 import ApiService from './ApiService'
 
-export default class CategoryService {
-  static url = 'categories/'
+export default class TransactionService {
+  static url = 'transactions/'
   static async list(params) {
     try {
       return await ApiService.get(this.url, params)

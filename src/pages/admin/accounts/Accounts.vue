@@ -12,21 +12,19 @@
               <thead>
                 <tr>
                   <th>Name</th>
-                  <th>Type</th>
-                  <th>Color</th>
+                  <th>Balance</th>
                 </tr>
               </thead>
 
               <tbody>
-                <tr v-for="category in categories" :key="category.uuid">
-                  <td>{{ category.name }}</td>
-                  <td>{{ category.type }}</td>
-                  <td>{{ category.color }}</td>
+                <tr v-for="account in accounts" :key="account.uuid">
+                  <td>{{ account.name }}</td>
+                  <td>{{ account.balance }}</td>
                   <td>
-                    <va-button class="mr-2 mb-2" size="small" @click="openEditForm(category)">Edit</va-button>
+                    <va-button class="mr-2 mb-2" size="small" @click="openEditForm(account)">Edit</va-button>
                   </td>
                   <td>
-                    <va-button class="mr-2 mb-2" size="small" color="danger" @click="deleteCategory(category.uuid)"
+                    <va-button class="mr-2 mb-2" size="small" color="danger" @click="deleteAccount(account.uuid)"
                       >Delete</va-button
                     >
                   </td>
@@ -44,13 +42,10 @@
           <form>
             <div class="row">
               <div class="flex md6 xs12">
-                <va-input v-model="name" placeholder="Name" />
+                <va-input v-model="name" placeholder="Name" label="Names" />
               </div>
-              <div v-if="buttonText === 'Update'" class="flex md6 xs12">
-                <va-input v-model="type" placeholder="Type" disabled />
-              </div>
-              <div v-else class="flex md6 xs12">
-                <va-select v-model="type" label="Type" :options="['expense', 'income']" />
+              <div class="flex md6 xs12">
+                <va-input v-model="balance" placeholder="Name" label="Balance" type="number" />
               </div>
               <div class="flex md6 xs12">
                 <va-select
@@ -81,6 +76,7 @@
   import CategoryService from '../../../services/http/CategoryService'
   import { themeColors, extraColors } from '../ui/colors/color-presentation/colorsData'
   import ColorPresentation from '../ui/colors/color-presentation/ColorPresentation.vue'
+  import AccountService from '../../../services/http/AccountService'
 
   const { t } = useI18n()
 
@@ -88,7 +84,7 @@
   const formTitle = ref('')
   const uuid = ref('')
   const name = ref('')
-  const type = ref('')
+  const balance = ref<number>()
   const color = ref({
     color: null,
     name: '',
@@ -96,59 +92,60 @@
   })
 
   let formIsOpen = ref(false)
-  let categories = ref([])
+  let accounts = ref([])
 
   onMounted(async () => {
-    await getCategories()
+    await getAccounts()
   })
 
-  async function getCategories() {
-    const response = await CategoryService.list()
-    categories.value = reactive(response)
+  async function getAccounts() {
+    const response = await AccountService.list()
+    accounts.value = reactive(response)
   }
 
-  function openEditForm(category: any) {
+  function openEditForm(account: any) {
     buttonText.value = 'Update'
-    formTitle.value = 'Edit Category'
+    formTitle.value = 'Edit Account'
     formIsOpen.value = true
-    uuid.value = category.uuid
-    name.value = category.name
-    type.value = category.type
-    color.value.color = category.color
+    uuid.value = account.uuid
+    name.value = account.name
+    balance.value = account.balance
+    color.value.color = account.color
   }
 
   function openCreateCategoryForm() {
     buttonText.value = 'Create'
-    formTitle.value = 'Create Category'
+    formTitle.value = 'Create Account'
     formIsOpen.value = true
 
     name.value = ''
-    type.value = ''
-    color.value.color = null
+    balance.value = 0
   }
 
   async function submit(uuid: string) {
     const data = {
       name: name.value,
-      type: type.value,
       color: color.value.color,
+      balance: balance.value,
+      in_total_balance: true,
+      currency_code: 'BGN',
     }
 
     if (uuid) {
-      await CategoryService.update(uuid, data)
+      await AccountService.update(uuid, data)
     } else {
-      await CategoryService.create(data)
+      await AccountService.create(data)
     }
 
-    await getCategories()
+    await getAccounts()
 
     formIsOpen.value = false
   }
 
-  async function deleteCategory(uuid: string) {
-    await CategoryService.delete(uuid)
+  async function deleteAccount(uuid: string) {
+    await AccountService.delete(uuid)
 
-    await getCategories()
+    await getAccounts()
   }
 </script>
 

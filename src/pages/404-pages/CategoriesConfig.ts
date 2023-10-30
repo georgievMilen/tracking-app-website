@@ -18,6 +18,15 @@ export default [
     ],
   },
   {
+    categoryName: 'Accounts',
+    items: [
+      {
+        itemName: 'Accounts',
+        itemLink: '/admin/accounts',
+      },
+    ],
+  },
+  {
     categoryName: 'Statistics',
     items: [
       {
