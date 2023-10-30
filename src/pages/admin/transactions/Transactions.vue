@@ -170,14 +170,17 @@
     })
   }
 
-  function openEditForm(category: any) {
+  function openEditForm(transaction: any) {
     buttonText.value = 'Update'
     formTitle.value = 'Edit Category'
     formIsOpen.value = true
-    uuid.value = category.uuid
+    uuid.value = transaction.uuid
 
-    type.value = category.type
-    color.value.color = category.color
+    category.value = transaction.category.name
+    account.value = transaction.account.name
+    amount.value = transaction.amount
+    type.value = transaction.type
+    color.value.color = transaction.color
   }
 
   function openCreateCategoryForm() {

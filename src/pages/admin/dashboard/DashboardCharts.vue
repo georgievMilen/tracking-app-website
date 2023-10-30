@@ -32,15 +32,14 @@
     </div>
 
     <div class="flex xs12 sm6">
-      <div class="flex xs12 lg6">
-        <va-button-toggle v-model="categoryType" :options="categoryTypes" @click="onCategoryToggle" />
-      </div>
-      <va-card class="d-flex">
-        <!--        <va-card-title>-->
-        <!--          <h1>{{ t('dashboard.charts.loadingSpeed') }}</h1>-->
-        <!--          <va-button icon="print" plain @click="printChart" />-->
-        <!--        </va-card-title>-->
+      <va-card class="d-flex donut-chart-card">
         <va-card-content v-if="doughnutChartDataGenerated">
+          <va-button-toggle
+            v-model="categoryType"
+            class="donut-chart-toggle"
+            :options="categoryTypes"
+            @click="onCategoryToggle"
+          />
           <va-chart
             ref="doughnutChart"
             class="chart chart--donut"
@@ -119,5 +118,11 @@
 <style scoped>
   .chart {
     height: 400px;
+  }
+  .donut-chart-card {
+    justify-content: center;
+  }
+  .donut-chart-toggle {
+    margin: 10px auto 20px;
   }
 </style>
