@@ -29,12 +29,21 @@
       <va-button class="my-0" @click="onsubmit">{{ t('auth.login') }}</va-button>
     </div>
   </form>
+  <va-modal
+    v-model="showModal"
+    size="small"
+    title="Error"
+    message="Incorrect email or password"
+    ok-text="OK"
+    cancel-text=""
+  />
 </template>
 
 <script setup lang="ts">
   import { computed, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useI18n } from 'vue-i18n'
+  import AuthService from '../../../services/http/AuthService'
   const { t } = useI18n()
 
   const email = ref('')
@@ -42,16 +51,34 @@
   const keepLoggedIn = ref(false)
   const emailErrors = ref<string[]>([])
   const passwordErrors = ref<string[]>([])
+  const responseError = ref('')
   const router = useRouter()
+  const showModal = ref(false)
 
   const formReady = computed(() => !emailErrors.value.length && !passwordErrors.value.length)
 
-  function onsubmit() {
+  async function onsubmit() {
+    responseError.value = ''
     if (!formReady.value) return
 
     emailErrors.value = email.value ? [] : ['Email is required']
     passwordErrors.value = password.value ? [] : ['Password is required']
 
-    router.push({ name: 'dashboard' })
+    try {
+      const response = await AuthService.login({
+        email: email.value,
+        password: password.value,
+      })
+
+      if (response.status === 200) {
+        return router.push({ name: 'dashboard' })
+      }
+
+      showModal.value = true
+    } catch (e) {
+      showModal.value = true
+      console.log('errorororo')
+      responseError.value = 'Incorrect email or password'
+    }
   }
 </script>

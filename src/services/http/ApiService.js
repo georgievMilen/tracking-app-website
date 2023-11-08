@@ -6,11 +6,9 @@ export default class ApiService {
 
     if (!response.data && !response.details) {
       return {}
-    } else if ('data' in response.data) {
-      return response.data.data
-    } else {
-      return response.data.details
     }
+
+    return response
   }
 
   static async get(url, params = null) {
